@@ -1,0 +1,45 @@
+-- SESSION 1
+
+-- postgres=# BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- BEGIN
+-- postgres=*# SELECT SUM(rating)
+-- postgres-*# FROM pizzeria;
+--  sum
+-- ------
+--  19.9
+-- (1 row)
+-- postgres=*# SELECT SUM(rating)
+-- postgres-*# FROM pizzeria;
+--  sum
+-- ------
+--  19.9
+-- (1 row)
+-- postgres=*# COMMIT;
+-- COMMIT
+-- postgres=# SELECT SUM(rating)
+-- postgres-# FROM pizzeria;
+--  sum
+-- ------
+--  23.9
+-- (1 row)
+
+-- SESSION 2
+
+-- postgres=# BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- BEGIN
+-- postgres=*# COMMIT;
+-- COMMIT
+-- postgres=# BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- BEGIN
+-- postgres=*# UPDATE pizzeria
+-- postgres-*# SET rating = 5
+-- postgres-*# WHERE name = 'Pizza Hut';
+-- UPDATE 1
+-- postgres=*# COMMIT;
+-- COMMIT
+-- postgres=# SELECT SUM(rating)
+-- postgres-# FROM pizzeria;
+--  sum
+-- ------
+--  23.9
+-- (1 row)
